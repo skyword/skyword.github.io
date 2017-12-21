@@ -1,4 +1,5 @@
 swagger: '2.0'
+x-api-id: 'skyword-publishing-api'
 info:
   description: |
     The Skyword Publishing API Specification for external plugins.
@@ -158,6 +159,12 @@ paths:
       tags:
       - media
       summary: Delete media file
+      parameters:
+       - name: id
+         in: path
+         description: Id of media
+         required: true
+         type: string
       responses:
         204:
           description: Media file deleted
