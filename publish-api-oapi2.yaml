@@ -1,0 +1,786 @@
+swagger: '2.0'
+info:
+  description: |
+    The Skyword Publishing API Specification for external plugins.
+  version: 1.0.0
+  title: Skyword Publishing API
+  contact:
+    email: support@skyword.com
+host: skydrupal7.skyword.com
+basePath: /skyword/v1
+schemes:
+ - https
+tags:
+- name: authors
+- name: content-types
+- name: media
+- name: taxonomies
+- name: posts
+- name: version
+produces:
+  - application/json
+paths:
+  /authors:
+    post:
+      tags:
+      - authors
+      summary: Add a new author to CMS
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Author to be added to CMS
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      responses:
+        201:
+          description: Author created successfully
+          headers:
+            Link:
+              description: URI of newly created author
+              type: string
+        422:
+          description: A validation error has occured
+    get:
+      tags:
+      - authors
+      summary: Retrieve a list of authors
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+  /authors/{id}:
+    get:
+      tags:
+      - authors
+      summary: Get a single author instance
+      parameters:
+      - name: id
+        in: path
+        description: Id of author
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Author'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Author not found
+  /media:
+    post:
+      tags:
+      - media
+      summary: Add a new media file to CMS
+      consumes:
+      - application/json
+      - application/octet-stream
+      parameters:
+      - name: Content-Disposition
+        in: header
+        required: true
+        type: string
+        description: attachment; filename="image-name.jpeg"
+      - in: body
+        name: body
+        description: Media file to be added to CMS (Only if sending file via json in base64 encoded string)
+        required: false
+        schema:
+          $ref: '#/definitions/MediaPostBase64'
+      responses:
+        201:
+          description: Media created successfully
+          headers:
+            Link:
+              description: URI of newly created media
+              type: string
+        422:
+          description: A validation error has occured
+    get:
+      tags:
+      - media
+      summary: Retreive a list of media file
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Media'
+  /media/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of media
+      required: true
+      type: string
+    get:
+      tags:
+      - media
+      summary: Retrieve information for media file
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Media'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Media not found
+    delete:
+      tags:
+      - media
+      summary: Delete media file
+      responses:
+        204:
+          description: Media file deleted
+        400:
+          description: Invalid id supplied
+        404:
+          description: Media not found
+  /media/{id}/metadata:
+    post:
+      tags:
+      - media
+      summary: Add metadata information for a media file
+      parameters:
+        - name: id
+          in: path
+          description: Id of media
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Metadata for media file
+          required: true
+          schema:
+            $ref: '#/definitions/MediaMetadata'
+      responses:
+        201:
+          description: OK
+          headers:
+            Link:
+              description: URI of updated media file
+              type: string
+        422:
+          description: A validation error has occured
+  /taxonomies:
+    get:
+      tags:
+      - taxonomies
+      summary: Retreive a list of taxonomies
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Taxonomy'
+    post:
+      tags:
+      - taxonomies
+      summary: Create a taxonomy
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Taxonomy to create
+        required: true
+        schema:
+          $ref: '#/definitions/Taxonomy'
+      responses:
+        201:
+          description: Taxonomy created successfully
+          headers:
+            Link:
+              description: URI of newly created taxonomy
+              type: string
+        422:
+          description: A validation error has occured
+  /taxonomies/{id}:
+    get:
+      tags:
+      - taxonomies
+      summary: Retrieve a specific taxonomy
+      parameters:
+      - name: id
+        in: path
+        description: Id of taxonomy
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Taxonomy'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Taxonomy not found
+  /taxonomies/{id}/terms:
+    get:
+      tags:
+      - taxonomies
+      summary: Retrieve a list of terms for a given taxonomy
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      - name: id
+        in: path
+        description: Id of taxonomy
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Term'
+        400:
+            description: Invalid id supplied
+        404:
+            description: Taxonomy not found
+    post:
+      tags:
+      - taxonomies
+      summary: Create a new taxonomy term
+      parameters:
+        - name: id
+          in: path
+          description: Id of taxonomy
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Term data
+          required: true
+          schema:
+            $ref: '#/definitions/Term'
+      responses:
+        201:
+          description: OK
+          headers:
+            Link:
+              description: URI of created term
+              type: string
+        422:
+          description: A validation error has occured
+  /version:
+    get:
+      tags:
+      - version
+      summary: >-
+        Returns basic vendor and version information of the CMS, the installed version of the Skyword plugin/module, and the programming language and version used.  This API call is a basic health check as it will return data if the Skyword plugin/module is installed and the authentication information is configured successfully.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Version'
+  /posts:
+    post:
+      tags:
+      - posts
+      summary: Create a new post
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Post to be added to CMS
+        required: true
+        schema:
+          $ref: '#/definitions/Post'
+      responses:
+        201:
+          description: Post created successfully
+          headers:
+            Link:
+              description: URI of newly created post
+              type: string
+    #TODO add field filter and possibly others
+    get:
+      tags:
+      - posts
+      summary: Get a list of posts
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Post'
+  /posts/{id}:
+    get:
+      tags:
+      - posts
+      summary: Get a single post instance
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Post'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Post not found
+    delete:
+      tags:
+      - posts
+      summary: Delete post
+      responses:
+        204:
+          description: Post deleted successfully
+        400:
+          description: Invalid id supplied
+        404:
+          description: Post not found
+  /content-types:
+    post:
+      tags:
+      - content-types
+      summary: Create a content type
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Content type to create
+        required: true
+        schema:
+          $ref: '#/definitions/ContentType'
+      responses:
+        201:
+          description: Content type created successfully
+          headers:
+            Link:
+              description: URI of newly created taxonomy
+              type: string
+        422:
+          description: A validation error has occured
+    get:
+      tags:
+      - content-types
+      summary: Get a list of content types
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ContentType'
+  /content-types/{id}:
+    get:
+      tags:
+      - content-types
+      parameters:
+      - name: id
+        in: path
+        description: Id of content type
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/ContentType'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Post not found
+definitions:
+  Author:
+    type: object
+    required:
+    - firstName
+    - lastName
+    - email
+    - byline
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: A unique identifier of the author.
+      firstName:
+        type: string
+        example: "Joe"
+        description: The first name given to the author
+      lastName:
+        type: string
+        example: "Schmoe"
+        description: The last name given to the author
+      email:
+        type: string
+        example: "jschmoe@gmail.com"
+        description: The email of the author
+      byline:
+        type: string
+        example: "Joseph Schmoe"
+        description: The byline of the author.
+      icon:
+        type: string
+        example: "https://s.gravatar.com/avatar/a75b34534543195aee714af2"
+        description: Link to the author’s profile picture (Only send if set)
+  Media:
+    type: object
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: A unique identifier of the media.
+      type:
+        type: string
+        example: image/jpeg
+        description: The media content type. (image/jpeg, image/gif, etc..)
+      url:
+        type: string
+        example: https://some-server/files/image1.jpg
+        description: The url to download the media file
+      metadata:
+        $ref: '#/definitions/MediaMetadata'
+  MediaMetadata:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Big Dog
+        description: The title to be used in an <img/> tag
+      alt:
+        type: string
+        example: Leonberger
+        description: The alt text to use in an <img/> tag
+  MediaPostBase64:
+    type: object
+    required:
+    - type
+    - file
+    - size
+    properties:
+      type:
+        type: string
+        example: image/jpeg
+        description: The mime type of the file. (image/jpeg, image/gif, etc..)
+      file:
+        type: string
+        example: Base64 encoded string here
+        description: Base64 encoded file
+      size:
+        type: integer
+        example: 21200
+        description: File size in bytes
+  Taxonomy:
+    type: object
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: A unique identifier of the taxonomy.
+      name:
+        type: string
+        example: Tags
+        description: The name given to the taxonomy.
+      description:
+        type: string
+        example: tags for articles
+        description: A description of the taxonomy (if any).
+      numTerms:
+        type: integer
+        example: 11
+        description: Number of terms associated with taxonomy.
+  Term:
+    type: object
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: The identifier of the taxonomy
+      value:
+        type: string
+        example: 'dog'
+        description: The value of the element.
+      parent:
+        type: string
+        example: "animals"
+        description: The parent element (if present)
+  Version:
+    type: object
+    properties:
+      plugin:
+        type: object
+        properties:
+          version:
+            type: string
+            example: '1.2'
+            description: The version of the plugin installed.
+          language:
+            type: object
+            properties:
+              name:
+                type: string
+                example: PHP
+                description: The name of the programming language used in the plugin.
+              version:
+                type: string
+                example: '5.6'
+                description: The version of the programming language used
+      cms:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Drupal
+            description: The name of the CMS vendor. \"Drupal\", \"WordPress\", etc...
+          version:
+            type: string
+            example: '7.1.2'
+            description: The version number of the CMS.
+  Post:
+    type: object
+    required:
+    - type
+    - title
+    - author
+    - fields
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: CMS id for post
+      skywordId:
+        type: number
+        example: 281474977787970
+        description: Skyword id for post
+      type:
+        type: string
+        example: 'post'
+        description: The content type of the post
+      title:
+        type: string
+        example: 'How to Business'
+        description: The title of the post
+      created:
+        type: string
+        format: date-time
+        example: '2017-11-14T15:28:25+00:00'
+        description: Date the post was created
+      updated:
+        type: string
+        format: date-time
+        example: '2017-11-14T16:02:25+00:00'
+        description: Date the post was last updated
+      url:
+        type: string
+        example: https://myblog.com/article-slug-here
+        description: The url of the post
+      author:
+        type: string
+        example: '4'
+        description: The author id that the post should be attached to
+      trackingTag:
+        type: string
+        example: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970
+        description: The Skyword tracking tag that will need added to the post head
+      fields:
+        type: array
+        items:
+            $ref: '#/definitions/PostField'
+        example:
+        - name: field_summary
+          value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+          type: TEXT
+        - name: field_body
+          value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+          type: HTML
+  PostField:
+    type: object
+    required:
+    - name
+    - value
+    - type
+    properties:
+      name:
+        type: string
+        example: field_summary
+        description: The internal name of the field in the CMS
+      value:
+        type: string
+        example: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+        description: The value to enter into the field
+      type:
+        type: string
+        example: TEXT
+        enum:
+        - TEXT
+        - HTML
+        - HEADER
+        - MEDIA
+        - TAXONOMY
+        - DATE
+        - BOOLEAN
+        description: |
+          The type of data
+          * TEXT - A field that only accepts plain text.
+          * HTML - A field that will accept text with html.
+          * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
+          * MEDIA - A field that contains an image or file.
+          * TAXONOMY - A field that is attached to a taxonomy.
+          * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
+          * BOOLEAN - A field that is true or false. A checkbox for example.
+  ContentType:
+    type: object
+    required:
+    - name
+    - fields
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: Internal CMS id
+      name:
+        type: string
+        example: blog
+        description: The internal name of the content type
+      description:
+        type: string
+        example: A blog post for our product.
+        description: The decription for the content type
+      fields:
+        type: array
+        items:
+            $ref: '#/definitions/ContentTypeField'
+  ContentTypeField:
+    type: object
+    required:
+    - name
+    - type
+    properties:
+      name:
+        type: string
+        example: field_summary
+        description: The internal name of the field in the CMS
+      label:
+        type: string
+        example: Summary
+        description: The label for the field
+      description:
+        type: string
+        example: Please enter a summary for the post in 240 characters or less.
+        description: The description or help text for the field
+      required:
+        type: boolean
+        description: The field is required to create a post. Will default to FALSE
+      #TODO add ui-type
+      type:
+        type: string
+        example: TEXT
+        enum:
+        - TEXT
+        - HTML
+        - HEADER
+        - MEDIA
+        - TAXONOMY
+        - DATE
+        - BOOLEAN
+        description: |
+          The type of data
+          * TEXT - A field that only accepts plain text.
+          * HTML - A field that will accept text with html.
+          * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
+          * MEDIA - A field that contains an image or file.
+          * TAXONOMY - A field that is attached to a taxonomy.
+          * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
+          * BOOLEAN - A field that is true or false. A checkbox for example.
+parameters:
+  pageParam:
+    name: page
+    in: query
+    type: string
+    description: The starting page number. Default is 1.
+    required: false
+    default : 1
+  perPageParam:
+    name: per_page
+    in: query
+    type: string
+    description: The number to retrieve per page. Default is 250.
+    required: false
+    default: 250
+securityDefinitions:
+  application:
+    type: oauth2
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: http://example.com/oauth/token
+    flow: application
+    scopes:
+      skyword: allows Skyword access
