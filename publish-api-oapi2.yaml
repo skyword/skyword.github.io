@@ -389,6 +389,12 @@ paths:
       tags:
       - posts
       summary: Delete post
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        type: string
       responses:
         204:
           description: Post deleted successfully
