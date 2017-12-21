@@ -135,16 +135,16 @@ paths:
             items:
               $ref: '#/definitions/Media'
   /media/{id}:
-    parameters:
-    - name: id
-      in: path
-      description: Id of media
-      required: true
-      type: string
     get:
       tags:
       - media
       summary: Retrieve information for media file
+      parameters:
+       - name: id
+         in: path
+         description: Id of media
+         required: true
+         type: string
       responses:
         200:
           description: OK
