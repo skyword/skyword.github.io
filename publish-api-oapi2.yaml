@@ -3,7 +3,7 @@ x-api-id: 'skyword-publishing-api'
 info:
   description: |
     The Skyword Publishing API Specification for external plugins.
-  version: 1.0.0
+  version: 1.0.0 Beta
   title: Skyword Publishing API
   contact:
     email: support@skyword.com
@@ -14,7 +14,7 @@ schemes:
 tags:
 - name: authors
 - name: content-types
-- name: media
+- name: images
 - name: taxonomies
 - name: posts
 - name: version
@@ -85,11 +85,11 @@ paths:
           description: Invalid id supplied
         404:
           description: Author not found
-  /media:
+  /images:
     post:
       tags:
-      - media
-      summary: Add a new media file to CMS
+      - images
+      summary: Add a new image file to CMS
       consumes:
       - application/json
       - application/octet-stream
@@ -101,23 +101,23 @@ paths:
         description: attachment; filename="image-name.jpeg"
       - in: body
         name: body
-        description: Media file to be added to CMS (Only if sending file via json in base64 encoded string)
+        description: Image file to be added to CMS (Only if sending file via json in base64 encoded string)
         required: false
         schema:
-          $ref: '#/definitions/MediaPostBase64'
+          $ref: '#/definitions/ImagePostBase64'
       responses:
         201:
-          description: Media created successfully
+          description: Image created successfully
           headers:
             Link:
-              description: URI of newly created media
+              description: URI of newly created image
               type: string
         422:
           description: A validation error has occured
     get:
       tags:
-      - media
-      summary: Retreive a list of media file
+      - images
+      summary: Retreive a list of image files
       parameters:
       - $ref: '#/parameters/pageParam'
       - $ref: '#/parameters/perPageParam'
@@ -134,67 +134,67 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Media'
-  /media/{id}:
+              $ref: '#/definitions/Image'
+  /images/{id}:
     get:
       tags:
-      - media
-      summary: Retrieve information for media file
+      - images
+      summary: Retrieve information for image file
       parameters:
        - name: id
          in: path
-         description: Id of media
+         description: Id of image
          required: true
          type: string
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/Media'
+            $ref: '#/definitions/Image'
         400:
           description: Invalid id supplied
         404:
-          description: Media not found
+          description: Image not found
     delete:
       tags:
-      - media
-      summary: Delete media file
+      - images
+      summary: Delete image file
       parameters:
        - name: id
          in: path
-         description: Id of media
+         description: Id of image
          required: true
          type: string
       responses:
         204:
-          description: Media file deleted
+          description: Image file deleted
         400:
           description: Invalid id supplied
         404:
-          description: Media not found
-  /media/{id}/metadata:
+          description: Image not found
+  /images/{id}/metadata:
     post:
       tags:
-      - media
-      summary: Add metadata information for a media file
+      - images
+      summary: Add metadata information for an image file
       parameters:
         - name: id
           in: path
-          description: Id of media
+          description: Id of image
           required: true
           type: string
         - in: body
           name: body
-          description: Metadata for media file
+          description: Metadata for image file
           required: true
           schema:
-            $ref: '#/definitions/MediaMetadata'
+            $ref: '#/definitions/ImageMetadata'
       responses:
         201:
           description: OK
           headers:
             Link:
-              description: URI of updated media file
+              description: URI of updated image file
               type: string
         422:
           description: A validation error has occured
@@ -505,24 +505,24 @@ definitions:
         type: string
         example: "https://s.gravatar.com/avatar/a75b34534543195aee714af2"
         description: Link to the author’s profile picture (Only send if set)
-  Media:
+  Image:
     type: object
     properties:
       id:
         type: string
         example: '1'
-        description: A unique identifier of the media.
+        description: A unique identifier of the Image.
       type:
         type: string
         example: image/jpeg
-        description: The media content type. (image/jpeg, image/gif, etc..)
+        description: The image content type. (image/jpeg, image/gif, etc..)
       url:
         type: string
         example: https://some-server/files/image1.jpg
-        description: The url to download the media file
+        description: The url to download the image file
       metadata:
-        $ref: '#/definitions/MediaMetadata'
-  MediaMetadata:
+        $ref: '#/definitions/ImageMetadata'
+  ImageMetadata:
     type: object
     properties:
       title:
@@ -533,7 +533,7 @@ definitions:
         type: string
         example: Leonberger
         description: The alt text to use in an <img/> tag
-  MediaPostBase64:
+  ImagePostBase64:
     type: object
     required:
     - type
@@ -697,7 +697,7 @@ definitions:
         - TEXT
         - HTML
         - HEADER
-        - MEDIA
+        - Image
         - TAXONOMY
         - DATE
         - BOOLEAN
@@ -706,7 +706,7 @@ definitions:
           * TEXT - A field that only accepts plain text.
           * HTML - A field that will accept text with html.
           * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
-          * MEDIA - A field that contains an image or file.
+          * IMAGE - A field that contains an image.
           * TAXONOMY - A field that is attached to a taxonomy.
           * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
           * BOOLEAN - A field that is true or false. A checkbox for example.
@@ -761,7 +761,7 @@ definitions:
         - TEXT
         - HTML
         - HEADER
-        - MEDIA
+        - IMAGE 
         - TAXONOMY
         - DATE
         - BOOLEAN
@@ -770,7 +770,7 @@ definitions:
           * TEXT - A field that only accepts plain text.
           * HTML - A field that will accept text with html.
           * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
-          * MEDIA - A field that contains an image or file.
+          * IMAGE - A field that contains an image.
           * TAXONOMY - A field that is attached to a taxonomy.
           * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
           * BOOLEAN - A field that is true or false. A checkbox for example.
