@@ -696,8 +696,8 @@ definitions:
         enum:
         - TEXT
         - HTML
-        - HEADER
-        - Image
+        - META 
+        - IMAGE
         - TAXONOMY
         - DATE
         - BOOLEAN
@@ -705,7 +705,7 @@ definitions:
           The type of data
           * TEXT - A field that only accepts plain text.
           * HTML - A field that will accept text with html.
-          * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
+          * META - A field that contains meta data. 
           * IMAGE - A field that contains an image.
           * TAXONOMY - A field that is attached to a taxonomy.
           * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
@@ -760,8 +760,8 @@ definitions:
         enum:
         - TEXT
         - HTML
-        - HEADER
-        - IMAGE 
+        - META
+        - IMAGE
         - TAXONOMY
         - DATE
         - BOOLEAN
@@ -769,7 +769,7 @@ definitions:
           The type of data
           * TEXT - A field that only accepts plain text.
           * HTML - A field that will accept text with html.
-          * HEADER - A field that belongs in the <header> tag. Meta tags of some sort usually.
+          * META - A field that contains meta data. 
           * IMAGE - A field that contains an image.
           * TAXONOMY - A field that is attached to a taxonomy.
           * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
