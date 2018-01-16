@@ -3,7 +3,7 @@ x-api-id: 'skyword-publishing-api'
 info:
   description: |
     The Skyword Publishing API Specification for external plugins.
-  version: 1.0.0 Beta
+  version: 0.1 Beta
   title: Skyword Publishing API
   contact:
     email: support@skyword.com
