@@ -358,6 +358,7 @@ paths:
       parameters:
       - $ref: '#/parameters/pageParam'
       - $ref: '#/parameters/perPageParam'
+      - $ref: '#/parameters/fields'
       responses:
         200:
           description: Success
@@ -383,6 +384,7 @@ paths:
         description: Id of post
         required: true
         type: string
+      - $ref: '#/parameters/fields'
       responses:
         200:
           description: OK
@@ -790,6 +792,12 @@ parameters:
     description: The number to retrieve per page. Default is 250.
     required: false
     default: 250
+  fields:
+    name: fields
+    in: query
+    type: string
+    description: Comma delimited field names to include in the response. If not sent, all fields are returned.
+    required: false
 securityDefinitions:
   application:
     type: oauth2
@@ -798,3 +806,4 @@ securityDefinitions:
     flow: application
     scopes:
       skyword: allows Skyword access
+      
