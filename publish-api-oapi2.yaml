@@ -457,6 +457,7 @@ paths:
     get:
       tags:
       - content-types
+      summary: Get a single content type instance
       parameters:
       - name: id
         in: path
