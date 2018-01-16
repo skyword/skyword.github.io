@@ -44,6 +44,13 @@ paths:
               type: string
         422:
           description: A validation error has occured
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Author already exists
+              description: 'Author already exists with the id: 12'
+            
     get:
       tags:
       - authors
@@ -65,6 +72,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Author'
+        404:
+          description: No authors found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: No authors found.
+              description: 'Either no authors exist or there is not an author role enabled for Skyword use. Please log into Drupal admin and select an author role at https://BASE_URL/admin/config/services/skyword'
   /authors/{id}:
     get:
       tags:
@@ -81,10 +96,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Author'
-        400:
-          description: Invalid id supplied
         404:
           description: Author not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Author not found
+              description: Author 12 was not found
   /images:
     post:
       tags:
@@ -114,6 +133,12 @@ paths:
               type: string
         422:
           description: A validation error has occured
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Content-Disposition header not set correctly
+              description: 'Content-Disposition header must be set in the following format: attachment; filename="filename.jpg"'
     get:
       tags:
       - images
@@ -135,6 +160,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Image'
+        404:
+          description: No images found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: No images found
+              description: No images exist in CMS
   /images/{id}:
     get:
       tags:
@@ -155,6 +188,12 @@ paths:
           description: Invalid id supplied
         404:
           description: Image not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Image not found
+              description: Image 10 was not found
     delete:
       tags:
       - images
@@ -168,10 +207,14 @@ paths:
       responses:
         204:
           description: Image file deleted
-        400:
-          description: Invalid id supplied
         404:
           description: Image not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Image not found
+              description: Image 10 was not found
   /images/{id}/metadata:
     post:
       tags:
@@ -196,8 +239,6 @@ paths:
             Link:
               description: URI of updated image file
               type: string
-        422:
-          description: A validation error has occured
   /taxonomies:
     get:
       tags:
@@ -220,6 +261,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Taxonomy'
+        404:
+          description: No taxonomies found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: No taxonomies found
+              description: 'Either no taxonomies exist or there are no enabled taxonomies for Skyword use. Please log into Drupal admin and enable taxonomies at https://BASE_URL/admin/config/services/skyword'      
     post:
       tags:
       - taxonomies
@@ -258,10 +307,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Taxonomy'
-        400:
-          description: Invalid id supplied
         404:
           description: Taxonomy not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Taxonomy not found
+              description: Taxonomy 5 was not found
   /taxonomies/{id}/terms:
     get:
       tags:
@@ -292,7 +345,13 @@ paths:
         400:
             description: Invalid id supplied
         404:
-            description: Taxonomy not found
+          description: Taxonomy not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Taxonomy not found
+              description: Taxonomy 5 was not found
     post:
       tags:
       - taxonomies
@@ -316,8 +375,17 @@ paths:
             Link:
               description: URI of created term
               type: string
+        404:
+          description: Taxonomy not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Taxonomy not found
+              description: Taxonomy 5 was not found
         422:
           description: A validation error has occured
+        
   /version:
     get:
       tags:
@@ -350,7 +418,15 @@ paths:
             Link:
               description: URI of newly created post
               type: string
-    #TODO add field filter and possibly others
+        422:
+          description: A validation error has occured
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Validation Error
+              description: Field 'tags' does not exist in type 'post'
+   
     get:
       tags:
       - posts
@@ -390,10 +466,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Post'
-        400:
-          description: Invalid id supplied
         404:
           description: Post not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Not Found
+              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
     delete:
       tags:
       - posts
@@ -407,10 +487,14 @@ paths:
       responses:
         204:
           description: Post deleted successfully
-        400:
-          description: Invalid id supplied
         404:
           description: Post not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Not Found
+              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
   /content-types:
     post:
       tags:
@@ -777,6 +861,13 @@ definitions:
           * TAXONOMY - A field that is attached to a taxonomy.
           * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
           * BOOLEAN - A field that is true or false. A checkbox for example.
+  GeneralError:
+    type: object
+    properties:
+      message:
+        type: string
+      description:
+        type: string
 parameters:
   pageParam:
     name: page
@@ -796,7 +887,7 @@ parameters:
     name: fields
     in: query
     type: string
-    description: Comma delimited field names to include in the response. If not sent, all fields are returned.
+    description: Comma delimited fields names to include in the response. If not sent, all fields are returned.
     required: false
 securityDefinitions:
   application:
@@ -806,4 +897,3 @@ securityDefinitions:
     flow: application
     scopes:
       skyword: allows Skyword access
-      
