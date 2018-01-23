@@ -841,27 +841,34 @@ definitions:
       required:
         type: boolean
         description: The field is required to create a post. Will default to FALSE
-      #TODO add ui-type
       type:
         type: string
-        example: TEXT
+        example: title
         enum:
-        - TEXT
-        - HTML
-        - META
+        - TITLE
+        - TEXT-FIELD
+        - TEXT-AREA
+        - SELECT-SINGLE
+        - SELECT-MULTIPLE
+        - TAXONOMY-SINGLE-SELECT
+        - TAXONOMY-SELECT-MULTIPLE
+        - CHECKBOX
+        - SUMMARY
         - IMAGE
-        - TAXONOMY
-        - DATE
-        - BOOLEAN
+        - DATETIME
         description: |
-          The type of data
-          * TEXT - A field that only accepts plain text.
-          * HTML - A field that will accept text with html.
-          * META - A field that contains meta data. 
-          * IMAGE - A field that contains an image.
-          * TAXONOMY - A field that is attached to a taxonomy.
-          * DATE - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
-          * BOOLEAN - A field that is true or false. A checkbox for example.
+          The type of field
+          * TITLE - The title of a post. Usually a single line of text.
+          * TEXT-FIELD - A single line of text field. Can contain html or plain text.
+          * TEXT-AREA - Multi-line text of any length. Can contain html or plain text.
+          * SELECT-SINGLE - A dropdown that only allows one selection.
+          * SELECT-MULTIPLE - A dropdown that allows any amount of selections.
+          * TAXONOMY-SELECT-SINGLE - A dropdown that only allows one selection and is tied to a taxonomy.
+          * TAXONOMY-SELECT-MULTIPLE - A dropdown that allows any amount of selections and is tied to a taxonomy.
+          * CHECKBOX - A checkbox that can only be true or false.
+          * SUMMARY - The summary of the post. Used when a CMS has a special field for a summary.
+          * IMAGE - A field that only accepts an image.
+          * DATETIME - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
   GeneralError:
     type: object
     properties:
