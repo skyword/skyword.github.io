@@ -386,7 +386,35 @@ paths:
               description: Taxonomy 5 was not found
         422:
           description: A validation error has occured
-        
+  /taxonomies/{taxonomyId}/terms/{id}:
+    get:
+      tags:
+      - taxonomies
+      summary: Retrieve a specific term from a taxonomy
+      parameters:
+      - name: taxonomyId
+        in: path
+        description: Id of taxonomy
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: Id of term
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Term'
+        404:
+          description: Term not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Term not found
+              description: Term 14 from Taxonomy 5 was not found    
   /version:
     get:
       tags:
