@@ -525,28 +525,6 @@ paths:
               message: Not Found
               description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
   /content-types:
-    post:
-      tags:
-      - content-types
-      summary: Create a content type
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Content type to create
-        required: true
-        schema:
-          $ref: '#/definitions/ContentType'
-      responses:
-        201:
-          description: Content type created successfully
-          headers:
-            Link:
-              description: URI of newly created taxonomy
-              type: string
-        422:
-          description: A validation error has occured
     get:
       tags:
       - content-types
@@ -854,6 +832,10 @@ definitions:
     - name
     - type
     properties:
+      id:
+        type: string
+        example: 1
+        description: The id of the field
       name:
         type: string
         example: field_summary
@@ -878,12 +860,14 @@ definitions:
         - TEXT-AREA
         - SELECT-SINGLE
         - SELECT-MULTIPLE
-        - TAXONOMY-SINGLE-SELECT
+        - TAXONOMY-SELECT-SINGLE
         - TAXONOMY-SELECT-MULTIPLE
+        - TAXONOMY-TEXT-FIELD
         - CHECKBOX
         - SUMMARY
         - IMAGE
         - DATETIME
+        - UNKNOWN
         description: |
           The type of field
           * TITLE - The title of a post. Usually a single line of text.
@@ -893,10 +877,12 @@ definitions:
           * SELECT-MULTIPLE - A dropdown that allows any amount of selections.
           * TAXONOMY-SELECT-SINGLE - A dropdown that only allows one selection and is tied to a taxonomy.
           * TAXONOMY-SELECT-MULTIPLE - A dropdown that allows any amount of selections and is tied to a taxonomy.
+          * TAXONOMY-TEXT-FIELD - A text field that contains a comma serperated list of taxonomy terms. Usually has autocomplete functionality.
           * CHECKBOX - A checkbox that can only be true or false.
           * SUMMARY - The summary of the post. Used when a CMS has a special field for a summary.
           * IMAGE - A field that only accepts an image.
           * DATETIME - A field that is a date. ISO-8601 format ('2017-11-09T15:20:51Z')
+          * UNKNOWN - A field that does not directly map into any of the above.
   GeneralError:
     type: object
     properties:
