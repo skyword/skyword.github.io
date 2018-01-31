@@ -1,6 +1,6 @@
 swagger: '2.0'
 x-api-id: 'skyword-publishing-api'
-x-samples-languages: curl, php, java, javascript, node
+x-samples-languages: ['curl', 'php', 'java', 'javascript', 'node']
 info:
   description: |
     The Skyword Publishing API Specification for external plugins.
