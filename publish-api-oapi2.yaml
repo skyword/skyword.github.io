@@ -180,6 +180,20 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Image'
+          examples:
+            application/json:
+              - id: 1
+                type: image/jpeg
+                url: https://some-server.com/files/image1.jpg
+                metadata:
+                  title: dogs
+                  alt: A small dog sitting on top of a very large dog.
+              - id: 2
+                type: image/jpeg
+                url: https://some-server.com/files/image2.jpg
+                metadata:
+                  title: dogs2
+                  alt: Dogs staring at the moon.              
         404:
           description: No images found
           schema:
@@ -204,6 +218,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Image'
+          examples:
+            application/json:
+              id: 1
+              type: image/jpeg
+              url: https://some-server.com/files/image1.jpg
+              metadata:
+                title: dogs
+                alt: A small dog sitting on top of a very large dog.            
         400:
           description: Invalid id supplied
         404:
@@ -281,6 +303,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Taxonomy'
+          examples:
+            application/json:
+              - id: 1
+                name: Tags
+                description: Tags for the article
+                numTerms: 45
+              - id: 2
+                name: Category
+                description: Categories for the article
+                numTerms: 100
         404:
           description: No taxonomies found
           schema:
@@ -327,6 +359,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Taxonomy'
+          examples:
+            application/json:
+              id: 1
+              name: Tags
+              description: Tags for the article
+              numTerms: 45
         404:
           description: Taxonomy not found
           schema:
@@ -362,6 +400,12 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Term'
+          examples:
+            application/json:
+              - id: 1
+                value: dogs
+              - id: 2
+                value: cats
         400:
             description: Invalid id supplied
         404:
@@ -426,6 +470,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Term'
+          examples:
+            application/json:
+              id: 1
+              value: dogs
         404:
           description: Term not found
           schema:
@@ -445,6 +493,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Version'
+          examples:
+            application/json:
+              plugin:
+                version: 1.2
+                language:
+                  name: PHP
+                  version: 5.6
+              cms:
+                name: Drupal
+                version: 7.1.2
   /posts:
     post:
       tags:
@@ -497,6 +555,40 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Post'
+          examples:
+            application/json: 
+              - id: 1
+                skywordId: 281474977787970
+                type: post
+                title: How to Business
+                created: 2017-11-14T15:28:25+00:00
+                updated: 2017-11-14T16:02:25+00:00
+                url: https://myblog.com/article-slug-here
+                author: 4
+                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
+                fields:
+                  - name: field_summary
+                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                    type: TEXT
+                  - name: field_body
+                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                    type: HTML              
+              - id: 2
+                skywordId: 281474977787969
+                type: post
+                title: How to Business Part 2
+                created: 2017-11-14T15:28:25+00:00
+                updated: 2017-11-14T16:02:25+00:00
+                url: https://myblog.com/article-slug-here
+                author: 4
+                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
+                fields:
+                  - name: field_summary
+                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                    type: TEXT
+                  - name: field_body
+                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                    type: HTML   
   /posts/{id}:
     get:
       tags:
@@ -514,6 +606,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Post'
+          examples:
+            application/json:
+              id: 1
+              skywordId: 281474977787970
+              type: post
+              title: How to Business
+              created: 2017-11-14T15:28:25+00:00
+              updated: 2017-11-14T16:02:25+00:00
+              url: https://myblog.com/article-slug-here
+              author: 4
+              trackingTag: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970>
+              fields:
+                - name: field_summary
+                  value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                  type: TEXT
+                - name: field_body
+                  value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                  type: HTML
         404:
           description: Post not found
           schema:
@@ -553,7 +663,7 @@ paths:
       - $ref: '#/parameters/perPageParam'
       responses:
         200:
-          description: Success
+          description: OK
           headers:
             Link:
               description: Pagination links (https://tools.ietf.org/html/rfc5988)
@@ -565,6 +675,40 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ContentType'
+          examples:
+            application/json:
+              - id: 1
+                name: blog
+                description: A blog post about our product
+                fields:
+                  - id: 1
+                    name: field_summary
+                    label: Summary
+                    description: Please enter a summary for the post in 240 characters or less.
+                    required: false
+                    type: SUMMARY
+                  - id: 2
+                    name: field_body
+                    label: Body
+                    description: Main blog text
+                    required: true
+                    type: TEXTAREA
+              - id: 2
+                name: article
+                description: An article about our company
+                fields:
+                  - id: 1
+                    name: field_summary
+                    label: Summary
+                    description: Please enter a summary for the post in 240 characters or less.
+                    required: false
+                    type: SUMMARY
+                  - id: 2
+                    name: field_body
+                    label: Body
+                    description: Main article text
+                    required: true
+                    type: TEXTAREA
   /content-types/{id}:
     get:
       tags:
@@ -581,10 +725,29 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/ContentType'
+          examples:
+            application/json:
+              id: 1
+              name: blog
+              description: A blog post about our product
+              fields:
+                - id: 1
+                  name: field_summary
+                  label: Summary
+                  description: Please enter a summary for the post in 240 characters or less.
+                  required: false
+                  type: SUMMARY
+                - id: 2
+                  name: field_body
+                  label: Body
+                  description: Main article text
+                  required: true
+                  type: TEXTAREA
         400:
           description: Invalid id supplied
         404:
           description: Post not found
+
 definitions:
   Author:
     type: object
@@ -690,7 +853,7 @@ definitions:
       id:
         type: string
         example: '1'
-        description: The identifier of the taxonomy
+        description: The identifier of the term.
       value:
         type: string
         example: 'dog'
