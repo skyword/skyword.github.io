@@ -73,6 +73,18 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Author'
+          examples:
+            application/json:
+              - id: 1
+                firstName: John
+                lastName: Doe
+                email: johndoe@gmail.com
+                byline: Mystery Author
+              - id: 2
+                firstName: Jane
+                lastName: Doe
+                email: janedoe@gmail.com
+                byline: Jane Doe
         404:
           description: No authors found
           schema:
@@ -97,6 +109,13 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Author'
+          examples:
+            application/json:
+              id: 1
+              firstName: John
+              lastName: Doe
+              email: johndoe@gmail.com
+              byline: Mystery Author              
         404:
           description: Author not found
           schema:
