@@ -503,6 +503,68 @@ paths:
               cms:
                 name: Drupal
                 version: 7.1.2
+                
+  /oauth2/token:
+    post:
+      tags: 
+      - oauth2
+      summary: Get an access token using a client id and client secret
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            grant_type:
+              type: string
+              example: client_credentials
+            client_id:
+              type: string
+              example: dd7893f85d3e2ded789bd9426f3ab34c
+            client_secret:
+              type: string
+              example: 189F084BC571DF9C8F8ED4E1A63B469FDDCAE531C8F45E7AD8E76D107520AD6B
+            scope:
+              type: string
+              example: skyword
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              access_token: 
+                type: string
+              expires_in:
+                type: string
+              token_type:
+                type: string
+              scope:
+                type: string
+          examples:
+            application/json:
+              access_token: 01d325caac15d15bc1002a9c91097e9b892dc9e2
+              expires_in: 3600
+              token_type: Bearer
+              scope: skyword
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              error_description:
+                type: string
+          examples:
+            application/json:
+              error: invalid_grant
+              error_description: Invalid credentials
+              
+            
   /posts:
     post:
       tags:
