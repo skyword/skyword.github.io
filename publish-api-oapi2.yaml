@@ -1076,14 +1076,14 @@ parameters:
   pageParam:
     name: page
     in: query
-    type: string
+    type: number
     description: The starting page number. Default is 1.
     required: false
     default : 1
   perPageParam:
     name: per_page
     in: query
-    type: string
+    type: number
     description: The number to retrieve per page. Default is 250.
     required: false
     default: 250
