@@ -22,6 +22,68 @@ tags:
 produces:
   - application/json
 paths:
+
+  /oauth2/token:
+    post:
+      tags: 
+      - oauth2
+      summary: Get an access token using a client id and client secret
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            grant_type:
+              type: string
+              example: client_credentials
+            client_id:
+              type: string
+              example: dd7893f85d3e2ded789bd9426f3ab34c
+            client_secret:
+              type: string
+              example: 189F084BC571DF9C8F8ED4E1A63B469FDDCAE531C8F45E7AD8E76D107520AD6B
+            scope:
+              type: string
+              example: skyword
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              access_token: 
+                type: string
+              expires_in:
+                type: string
+              token_type:
+                type: string
+              scope:
+                type: string
+          examples:
+            application/json:
+              access_token: 01d325caac15d15bc1002a9c91097e9b892dc9e2
+              expires_in: 3600
+              token_type: Bearer
+              scope: skyword
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              error_description:
+                type: string
+          examples:
+            application/json:
+              error: invalid_grant
+              error_description: Invalid credentials
+              
+
   /authors:
     post:
       tags:
@@ -124,6 +186,103 @@ paths:
             application/json:
               message: Author not found
               description: Author 12 was not found
+              
+  /content-types:
+    get:
+      tags:
+      - content-types
+      summary: Get a list of content types
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      responses:
+        200:
+          description: OK
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ContentType'
+          examples:
+            application/json:
+              - id: 1
+                name: blog
+                description: A blog post about our product
+                fields:
+                  - id: 1
+                    name: field_summary
+                    label: Summary
+                    description: Please enter a summary for the post in 240 characters or less.
+                    required: false
+                    type: SUMMARY
+                  - id: 2
+                    name: field_body
+                    label: Body
+                    description: Main blog text
+                    required: true
+                    type: TEXTAREA
+              - id: 2
+                name: article
+                description: An article about our company
+                fields:
+                  - id: 1
+                    name: field_summary
+                    label: Summary
+                    description: Please enter a summary for the post in 240 characters or less.
+                    required: false
+                    type: SUMMARY
+                  - id: 2
+                    name: field_body
+                    label: Body
+                    description: Main article text
+                    required: true
+                    type: TEXTAREA
+  /content-types/{id}:
+    get:
+      tags:
+      - content-types
+      summary: Get a single content type instance
+      parameters:
+      - name: id
+        in: path
+        description: Id of content type
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/ContentType'
+          examples:
+            application/json:
+              id: 1
+              name: blog
+              description: A blog post about our product
+              fields:
+                - id: 1
+                  name: field_summary
+                  label: Summary
+                  description: Please enter a summary for the post in 240 characters or less.
+                  required: false
+                  type: SUMMARY
+                - id: 2
+                  name: field_body
+                  label: Body
+                  description: Main article text
+                  required: true
+                  type: TEXTAREA
+        400:
+          description: Invalid id supplied
+        404:
+          description: Post not found
+
+              
   /images:
     post:
       tags:
@@ -281,6 +440,158 @@ paths:
             Link:
               description: URI of updated image file
               type: string
+
+  /posts:
+    post:
+      tags:
+      - posts
+      summary: Create a new post
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Post to be added to CMS
+        required: true
+        schema:
+          $ref: '#/definitions/Post'
+      responses:
+        201:
+          description: Post created successfully
+          headers:
+            Link:
+              description: URI of newly created post
+              type: string
+        422:
+          description: A validation error has occured
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Validation Error
+              description: Field 'tags' does not exist in type 'post'
+   
+    get:
+      tags:
+      - posts
+      summary: Get a list of posts
+      parameters:
+      - $ref: '#/parameters/pageParam'
+      - $ref: '#/parameters/perPageParam'
+      - $ref: '#/parameters/fields'
+      responses:
+        200:
+          description: Success
+          headers:
+            Link:
+              description: Pagination links (https://tools.ietf.org/html/rfc5988)
+              type: string
+            X-Total-Count:
+              description: The total number of results
+              type: integer
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Post'
+          examples:
+            application/json: 
+              - id: 1
+                skywordId: 281474977787970
+                type: post
+                title: How to Business
+                created: 2017-11-14T15:28:25+00:00
+                updated: 2017-11-14T16:02:25+00:00
+                url: https://myblog.com/article-slug-here
+                author: 4
+                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
+                fields:
+                  - name: field_summary
+                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                    type: TEXT
+                  - name: field_body
+                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                    type: HTML              
+              - id: 2
+                skywordId: 281474977787969
+                type: post
+                title: How to Business Part 2
+                created: 2017-11-14T15:28:25+00:00
+                updated: 2017-11-14T16:02:25+00:00
+                url: https://myblog.com/article-slug-here
+                author: 4
+                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
+                fields:
+                  - name: field_summary
+                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                    type: TEXT
+                  - name: field_body
+                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                    type: HTML   
+  /posts/{id}:
+    get:
+      tags:
+      - posts
+      summary: Get a single post instance
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        type: string
+      - $ref: '#/parameters/fields'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Post'
+          examples:
+            application/json:
+              id: 1
+              skywordId: 281474977787970
+              type: post
+              title: How to Business
+              created: 2017-11-14T15:28:25+00:00
+              updated: 2017-11-14T16:02:25+00:00
+              url: https://myblog.com/article-slug-here
+              author: 4
+              trackingTag: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970>
+              fields:
+                - name: field_summary
+                  value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
+                  type: TEXT
+                - name: field_body
+                  value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
+                  type: HTML
+        404:
+          description: Post not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Not Found
+              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
+    delete:
+      tags:
+      - posts
+      summary: Delete post
+      parameters:
+      - name: id
+        in: path
+        description: Id of post
+        required: true
+        type: string
+      responses:
+        204:
+          description: Post deleted successfully
+        404:
+          description: Post not found
+          schema:
+            $ref: '#/definitions/GeneralError'
+          examples:
+            application/json:
+              message: Not Found
+              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
+              
   /taxonomies:
     get:
       tags:
@@ -504,312 +815,6 @@ paths:
                 name: Drupal
                 version: 7.1.2
                 
-  /oauth2/token:
-    post:
-      tags: 
-      - oauth2
-      summary: Get an access token using a client id and client secret
-      consumes:
-      - application/x-www-form-urlencoded
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          type: object
-          properties:
-            grant_type:
-              type: string
-              example: client_credentials
-            client_id:
-              type: string
-              example: dd7893f85d3e2ded789bd9426f3ab34c
-            client_secret:
-              type: string
-              example: 189F084BC571DF9C8F8ED4E1A63B469FDDCAE531C8F45E7AD8E76D107520AD6B
-            scope:
-              type: string
-              example: skyword
-      responses:
-        200:
-          description: OK
-          schema:
-            type: object
-            properties:
-              access_token: 
-                type: string
-              expires_in:
-                type: string
-              token_type:
-                type: string
-              scope:
-                type: string
-          examples:
-            application/json:
-              access_token: 01d325caac15d15bc1002a9c91097e9b892dc9e2
-              expires_in: 3600
-              token_type: Bearer
-              scope: skyword
-        400:
-          description: Bad Request
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              error_description:
-                type: string
-          examples:
-            application/json:
-              error: invalid_grant
-              error_description: Invalid credentials
-              
-            
-  /posts:
-    post:
-      tags:
-      - posts
-      summary: Create a new post
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Post to be added to CMS
-        required: true
-        schema:
-          $ref: '#/definitions/Post'
-      responses:
-        201:
-          description: Post created successfully
-          headers:
-            Link:
-              description: URI of newly created post
-              type: string
-        422:
-          description: A validation error has occured
-          schema:
-            $ref: '#/definitions/GeneralError'
-          examples:
-            application/json:
-              message: Validation Error
-              description: Field 'tags' does not exist in type 'post'
-   
-    get:
-      tags:
-      - posts
-      summary: Get a list of posts
-      parameters:
-      - $ref: '#/parameters/pageParam'
-      - $ref: '#/parameters/perPageParam'
-      - $ref: '#/parameters/fields'
-      responses:
-        200:
-          description: Success
-          headers:
-            Link:
-              description: Pagination links (https://tools.ietf.org/html/rfc5988)
-              type: string
-            X-Total-Count:
-              description: The total number of results
-              type: integer
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Post'
-          examples:
-            application/json: 
-              - id: 1
-                skywordId: 281474977787970
-                type: post
-                title: How to Business
-                created: 2017-11-14T15:28:25+00:00
-                updated: 2017-11-14T16:02:25+00:00
-                url: https://myblog.com/article-slug-here
-                author: 4
-                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
-                fields:
-                  - name: field_summary
-                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
-                    type: TEXT
-                  - name: field_body
-                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
-                    type: HTML              
-              - id: 2
-                skywordId: 281474977787969
-                type: post
-                title: How to Business Part 2
-                created: 2017-11-14T15:28:25+00:00
-                updated: 2017-11-14T16:02:25+00:00
-                url: https://myblog.com/article-slug-here
-                author: 4
-                trackingTag: <script async type='text/javascript' src='//tracking.skyword.com/tracker.js?contentId=281474977787970>
-                fields:
-                  - name: field_summary
-                    value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
-                    type: TEXT
-                  - name: field_body
-                    value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
-                    type: HTML   
-  /posts/{id}:
-    get:
-      tags:
-      - posts
-      summary: Get a single post instance
-      parameters:
-      - name: id
-        in: path
-        description: Id of post
-        required: true
-        type: string
-      - $ref: '#/parameters/fields'
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Post'
-          examples:
-            application/json:
-              id: 1
-              skywordId: 281474977787970
-              type: post
-              title: How to Business
-              created: 2017-11-14T15:28:25+00:00
-              updated: 2017-11-14T16:02:25+00:00
-              url: https://myblog.com/article-slug-here
-              author: 4
-              trackingTag: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970>
-              fields:
-                - name: field_summary
-                  value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
-                  type: TEXT
-                - name: field_body
-                  value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
-                  type: HTML
-        404:
-          description: Post not found
-          schema:
-            $ref: '#/definitions/GeneralError'
-          examples:
-            application/json:
-              message: Not Found
-              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
-    delete:
-      tags:
-      - posts
-      summary: Delete post
-      parameters:
-      - name: id
-        in: path
-        description: Id of post
-        required: true
-        type: string
-      responses:
-        204:
-          description: Post deleted successfully
-        404:
-          description: Post not found
-          schema:
-            $ref: '#/definitions/GeneralError'
-          examples:
-            application/json:
-              message: Not Found
-              description: Post 4 not found. It either does not exist or its content type is not enabled for Skyword use.
-  /content-types:
-    get:
-      tags:
-      - content-types
-      summary: Get a list of content types
-      parameters:
-      - $ref: '#/parameters/pageParam'
-      - $ref: '#/parameters/perPageParam'
-      responses:
-        200:
-          description: OK
-          headers:
-            Link:
-              description: Pagination links (https://tools.ietf.org/html/rfc5988)
-              type: string
-            X-Total-Count:
-              description: The total number of results
-              type: integer
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ContentType'
-          examples:
-            application/json:
-              - id: 1
-                name: blog
-                description: A blog post about our product
-                fields:
-                  - id: 1
-                    name: field_summary
-                    label: Summary
-                    description: Please enter a summary for the post in 240 characters or less.
-                    required: false
-                    type: SUMMARY
-                  - id: 2
-                    name: field_body
-                    label: Body
-                    description: Main blog text
-                    required: true
-                    type: TEXTAREA
-              - id: 2
-                name: article
-                description: An article about our company
-                fields:
-                  - id: 1
-                    name: field_summary
-                    label: Summary
-                    description: Please enter a summary for the post in 240 characters or less.
-                    required: false
-                    type: SUMMARY
-                  - id: 2
-                    name: field_body
-                    label: Body
-                    description: Main article text
-                    required: true
-                    type: TEXTAREA
-  /content-types/{id}:
-    get:
-      tags:
-      - content-types
-      summary: Get a single content type instance
-      parameters:
-      - name: id
-        in: path
-        description: Id of content type
-        required: true
-        type: string
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/ContentType'
-          examples:
-            application/json:
-              id: 1
-              name: blog
-              description: A blog post about our product
-              fields:
-                - id: 1
-                  name: field_summary
-                  label: Summary
-                  description: Please enter a summary for the post in 240 characters or less.
-                  required: false
-                  type: SUMMARY
-                - id: 2
-                  name: field_body
-                  label: Body
-                  description: Main article text
-                  required: true
-                  type: TEXTAREA
-        400:
-          description: Invalid id supplied
-        404:
-          description: Post not found
-
 definitions:
   Author:
     type: object
