@@ -36,10 +36,16 @@ paths:
         required: true
         schema:
           type: object
+          required: 
+            - grant_type
+            - client_id
+            - client_secret
+            - scope
           properties:
             grant_type:
               type: string
               example: client_credentials
+              enum: ['client_credentials']
             client_id:
               type: string
               example: dd7893f85d3e2ded789bd9426f3ab34c
@@ -49,6 +55,7 @@ paths:
             scope:
               type: string
               example: skyword
+              enum: ['skyword']
       responses:
         200:
           description: OK
