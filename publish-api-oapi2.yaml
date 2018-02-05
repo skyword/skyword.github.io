@@ -12,7 +12,6 @@ host: skydrupal7.skyword.com
 basePath: /skyword/v1
 schemes:
  - http
- - https
 tags:
 - name: authors
 - name: content-types
