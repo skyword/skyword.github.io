@@ -21,10 +21,13 @@ tags:
 - name: version
 produces:
   - application/json
+security:
+  - OAuth2: [skyword]
 paths:
 
   /oauth2/token:
     post:
+      security: []
       tags: 
       - oauth2
       summary: Get an access token using a client id and client secret
@@ -1168,7 +1171,7 @@ parameters:
     description: Comma delimited fields names to include in the response. If not sent, all fields are returned.
     required: false
 securityDefinitions:
-  application:
+  OAuth2:
     type: oauth2
     tokenUrl: http://skydrupal7.skyword.com/skyword/v1/oauth2/token
     flow: application
