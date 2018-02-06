@@ -1076,7 +1076,7 @@ definitions:
       name:
         type: string
         example: blog
-        description: The internal name of the content type
+        description: The name of the content type
       description:
         type: string
         example: A blog post for our product.
