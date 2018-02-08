@@ -1,11 +1,11 @@
 swagger: '2.0'
-x-api-id: 'skyword-publishing-api'
+x-api-id: 'skyword-push-publishing'
 x-samples-languages: ['curl', 'php', 'java', 'javascript', 'node']
 info:
   description: |
-    The Skyword Publishing API Specification for external plugins.
+    The Skyword Push Publishing Specification for external plugins.
   version: 0.1 Beta
-  title: Skyword Publishing API
+  title: Skyword Push Publishing
   contact:
     email: support@skyword.com
 host: skydrupal7.skyword.com
@@ -807,7 +807,8 @@ paths:
     get:
       tags:
       - version
-      summary: >-
+      summary: Get version information
+      description: >-
         Returns basic vendor and version information of the CMS, the installed version of the Skyword plugin/module, and the programming language and version used.  This API call is a basic health check as it will return data if the Skyword plugin/module is installed and the authentication information is configured successfully.
       responses:
         200:
