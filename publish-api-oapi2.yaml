@@ -641,29 +641,7 @@ paths:
           examples:
             application/json:
               message: No taxonomies found
-              description: 'Either no taxonomies exist or there are no enabled taxonomies for Skyword use. Please log into Drupal admin and enable taxonomies at https://BASE_URL/admin/config/services/skyword'      
-    post:
-      tags:
-      - taxonomies
-      summary: Create a taxonomy
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Taxonomy to create
-        required: true
-        schema:
-          $ref: '#/definitions/Taxonomy'
-      responses:
-        201:
-          description: Taxonomy created successfully
-          headers:
-            Link:
-              description: URI of newly created taxonomy
-              type: string
-        422:
-          description: A validation error has occured
+              description: 'Either no taxonomies exist or there are no enabled taxonomies for Skyword use. Please log into Drupal admin and enable taxonomies at https://BASE_URL/admin/config/services/skyword'
   /taxonomies/{id}:
     get:
       tags:
