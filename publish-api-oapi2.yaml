@@ -585,7 +585,7 @@ paths:
       - posts
       summary: Delete post
       parameters:
-      - name: id
+      - name: postId
         in: path
         description: Id of post
         required: true
