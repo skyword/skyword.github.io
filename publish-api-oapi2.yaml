@@ -165,13 +165,13 @@ paths:
             application/json:
               message: No authors found.
               description: 'Either no authors exist or there is not an author role enabled for Skyword use. Please log into Drupal admin and select an author role at https://BASE_URL/admin/config/services/skyword'
-  /authors/{id}:
+  /authors/{authorId}:
     get:
       tags:
       - authors
       summary: Get a single author instance
       parameters:
-      - name: id
+      - name: authorId
         in: path
         description: Id of author
         required: true
@@ -253,13 +253,13 @@ paths:
                     description: Main article text
                     required: true
                     type: TEXTAREA
-  /content-types/{id}:
+  /content-types/{contentTypeId}:
     get:
       tags:
       - content-types
       summary: Get a single content type instance
       parameters:
-      - name: id
+      - name: contentTypeId
         in: path
         description: Id of content type
         required: true
@@ -371,13 +371,13 @@ paths:
             application/json:
               message: No images found
               description: No images exist in CMS
-  /images/{id}:
+  /images/{imageId}:
     get:
       tags:
       - images
       summary: Retrieve information for image file
       parameters:
-       - name: id
+       - name: imageId
          in: path
          description: Id of image
          required: true
@@ -426,13 +426,13 @@ paths:
             application/json:
               message: Image not found
               description: Image 10 was not found
-  /images/{id}/metadata:
+  /images/{imageId}/metadata:
     post:
       tags:
       - images
       summary: Add metadata information for an image file
       parameters:
-        - name: id
+        - name: imageId
           in: path
           description: Id of image
           required: true
@@ -537,13 +537,13 @@ paths:
                   - name: field_body
                     value: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit convallis integer proin quisque cras, diam congue cum mattis lacinia metus maecenas ullamcorper eros per. Habitant pellentesque maecenas augue amet urna nibh montes tellus, primis consectetur viverra convallis vivamus habitasse fermentum vehicula, vitae bibendum nulla sem mollis non id. Aenean purus in nibh bibendum orci inceptos ut, cubilia venenatis semper donec diam hac.</p>
                     type: HTML   
-  /posts/{id}:
+  /posts/{postId}:
     get:
       tags:
       - posts
       summary: Get a single post instance
       parameters:
-      - name: id
+      - name: postId
         in: path
         description: Id of post
         required: true
@@ -642,13 +642,13 @@ paths:
             application/json:
               message: No taxonomies found
               description: 'Either no taxonomies exist or there are no enabled taxonomies for Skyword use. Please log into Drupal admin and enable taxonomies at https://BASE_URL/admin/config/services/skyword'
-  /taxonomies/{id}:
+  /taxonomies/{taxonomyId}:
     get:
       tags:
       - taxonomies
       summary: Retrieve a specific taxonomy
       parameters:
-      - name: id
+      - name: taxonomyId
         in: path
         description: Id of taxonomy
         required: true
@@ -672,7 +672,7 @@ paths:
             application/json:
               message: Taxonomy not found
               description: Taxonomy 5 was not found
-  /taxonomies/{id}/terms:
+  /taxonomies/{taxonomyId}/terms:
     get:
       tags:
       - taxonomies
@@ -680,7 +680,7 @@ paths:
       parameters:
       - $ref: '#/parameters/pageParam'
       - $ref: '#/parameters/perPageParam'
-      - name: id
+      - name: taxonomyId
         in: path
         description: Id of taxonomy
         required: true
@@ -720,7 +720,7 @@ paths:
       - taxonomies
       summary: Create a new taxonomy term
       parameters:
-        - name: id
+        - name: taxonomyId
           in: path
           description: Id of taxonomy
           required: true
@@ -748,7 +748,7 @@ paths:
               description: Taxonomy 5 was not found
         422:
           description: A validation error has occured
-  /taxonomies/{taxonomyId}/terms/{id}:
+  /taxonomies/{taxonomyId}/terms/{termId}:
     get:
       tags:
       - taxonomies
@@ -759,7 +759,7 @@ paths:
         description: Id of taxonomy
         required: true
         type: string
-      - name: id
+      - name: termId
         in: path
         description: Id of term
         required: true
