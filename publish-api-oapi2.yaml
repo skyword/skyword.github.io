@@ -3,9 +3,9 @@ x-api-id: 'skyword-push-publishing'
 x-samples-languages: ['curl', 'php', 'java', 'javascript', 'node']
 info:
   description: |
-    The Skyword Push Publishing Specification for external plugins.
+    The Skyword Publishing API Specification for external plugins.
   version: 0.1 Beta
-  title: Skyword Push Publishing
+  title: Skyword Publishing API
   contact:
     email: support@skyword.com
 host: skydrupal7.skyword.com
