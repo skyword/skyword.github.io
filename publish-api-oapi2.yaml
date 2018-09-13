@@ -1077,10 +1077,3 @@ parameters:
     type: string
     description: Comma delimited fields names to include in the response. If not sent, all fields are returned.
     required: false
-securityDefinitions:
-  OAuth2:
-    type: oauth2
-    tokenUrl: http://skydrupal7.skyword.com/skyword/v1/oauth2/token
-    flow: application
-    scopes:
-      skyword: allows Skyword access
