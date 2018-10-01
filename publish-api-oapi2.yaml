@@ -378,6 +378,14 @@ paths:
             Link:
               description: URI of updated image file
               type: string
+        404:
+            description: Image not found
+            schema:
+                $ref: '#/definitions/GeneralError'
+            examples:
+                application/json:
+                    message: Image not found
+                    description: Image 11 was not found
 
   /posts:
     post:
@@ -492,7 +500,7 @@ paths:
               updated: 2017-11-14T16:02:25+00:00
               url: https://myblog.com/article-slug-here
               author: 4
-              trackingTag: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970>
+              trackingTag: anonymous
               fields:
                 - name: field_summary
                   value: Lorem ipsum dolor sit amet consectetur adipiscing elit integer aliquet
@@ -765,6 +773,49 @@ definitions:
         type: string
         example: "https://s.gravatar.com/avatar/a75b34534543195aee714af2"
         description: Link to the author’s profile picture (Only send if set)
+  CreateAuthor:
+    type: object
+    required:
+    - firstName
+    - lastName
+    - email
+    - byline
+    properties:
+      id:
+        type: string
+        example: '1'
+        description: A unique identifier of the author.
+      firstName:
+        type: string
+        example: "Joe"
+        description: The first name given to the author
+      lastName:
+        type: string
+        example: "Schmoe"
+        description: The last name given to the author
+      email:
+        type: string
+        example: "jschmoe@gmail.com"
+        description: The email of the author
+      byline:
+        type: string
+        example: "Joseph Schmoe"
+        description: The byline of the author.
+      profileImage:
+        fields:
+        type: array
+        items:
+            $ref: '#/definitions/PostField'
+        example:
+        - name: fileName
+          value: image.jpg
+          type: META
+        - name: imageData
+          value: <base64 encoded image>
+          type: IMAGE
+        - name: mimeType
+          value: image/jpg
+          type: META
   Image:
     type: object
     properties:
@@ -922,8 +973,8 @@ definitions:
         description: The author id that the post should be attached to
       trackingTag:
         type: string
-        example: <script async type='text/javascript' src='//tracking.skyword.com:7090/tracker.js?contentId=281474977787970
-        description: The Skyword tracking tag that will need added to the post head
+        example: 'true'
+        description: A value describing how to append the Skyword tracking tag ("true", "false", "anonymous")
       fields:
         type: array
         items:
