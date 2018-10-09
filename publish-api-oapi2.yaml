@@ -739,7 +739,21 @@ paths:
               cms:
                 name: Drupal
                 version: 7.1.2
-                
+   
+  /support/phpinfo:
+    get:
+      tags:
+      - support
+      summary: Get server information
+      description: Returns the phpinfo of the hosting server. By default the callback for this route is commented out for security reasons and will return a php error. Skyword support may ask that you uncomment the callback for this route for troubleshooting purposes.
+      
+  /support/tagdetails:
+    get:
+      tags:
+      - support
+      summary: Get Skyword metadata about Tags
+      description: Returns the created and last-used DateTimes for all Tags from Skyword. This endpoint is currently unused but will be utilized in the future for database cleanup and Tag pruning.
+      
 definitions:
   Author:
     type: object
