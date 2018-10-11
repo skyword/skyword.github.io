@@ -757,7 +757,7 @@ paths:
       tags:
       - support
       summary: Get Skyword metadata about Tags
-      description: Returns the created and last-used DateTimes for all Tags from Skyword. This endpoint us currently unused but will be utilized in the future for database cleanup and Tag pruning.
+      description: Returns the created and last-used DateTimes for all Tags from Skyword. This endpoint is currently unused but will be utilized in the future for database cleanup and Tag pruning.
       responses:
         200:
           description: OK
