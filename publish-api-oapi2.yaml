@@ -35,7 +35,7 @@ paths:
         description: Author to be added to CMS
         required: true
         schema:
-          $ref: '#/definitions/Author'
+          $ref: '#/definitions/CreateAuthor'
       responses:
         201:
           description: Author created successfully
@@ -746,13 +746,23 @@ paths:
       - support
       summary: Get server information
       description: Returns the phpinfo of the hosting server. By default the callback for this route is commented out for security reasons and will return a php error. Skyword support may ask that you uncomment the callback for this route for troubleshooting purposes.
+      responses:
+        200: 
+          description: OK
+        403:
+          description: Authorization Error
       
   /support/tagdetails:
     get:
       tags:
       - support
       summary: Get Skyword metadata about Tags
-      description: Returns the created and last-used DateTimes for all Tags from Skyword. This endpoint is currently unused but will be utilized in the future for database cleanup and Tag pruning.
+      description: Returns the created and last-used DateTimes for all Tags from Skyword. This endpoint us currently unused but will be utilized in the future for database cleanup and Tag pruning.
+      responses:
+        200:
+          description: OK
+        403:
+          description: Authorization Error
       
 definitions:
   Author:
@@ -816,20 +826,9 @@ definitions:
         example: "Joseph Schmoe"
         description: The byline of the author.
       profileImage:
-        fields:
         type: array
         items:
             $ref: '#/definitions/PostField'
-        example:
-        - name: fileName
-          value: image.jpg
-          type: META
-        - name: imageData
-          value: <base64 encoded image>
-          type: IMAGE
-        - name: mimeType
-          value: image/jpg
-          type: META
   Image:
     type: object
     properties:
