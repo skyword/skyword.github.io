@@ -17,6 +17,8 @@ tags:
 - name: content-types
 - name: images
 - name: taxonomies
+- name: tags
+- name: categories
 - name: posts
 - name: version
 produces:
@@ -218,9 +220,8 @@ paths:
         400:
           description: Invalid id supplied
         404:
-          description: Post not found
-
-              
+          description: Post not found 
+                   
   /images:
     post:
       tags:
@@ -386,6 +387,52 @@ paths:
                 application/json:
                     message: Image not found
                     description: Image 11 was not found
+  /tags:
+    get:
+      tags:
+      - tags
+      summary: Retrieves a list of existing tags
+      responses:
+        200:
+          description: Tags retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tags'
+
+  /categories:
+    get:
+      tags:
+      - categories
+      summary: Retrieves a list of existing categories
+      responses:
+        200:
+          description: Categories retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Categories'
+
+  /post-count:
+    get:
+      tags:
+      - posts
+      summary: Retrieves the number of posts fitting the supplied parameters
+      parameters:
+      - $ref: '#/parameters/titleParam'
+      - $ref: '#/parameters/tagParam'
+      - $ref: '#/parameters/categoryParam'
+      - $ref: '#/parameters/postStatusParam'
+      - $ref: '#/parameters/postTypeParam'
+      - $ref: '#/parameters/beforeDateParam'
+      - $ref: '#/parameters/afterDateParam'
+      - $ref: '#/parameters/authorParam'
+      - $ref: '#/parameters/skywordContentParam'
+      responses:
+        200:
+          description: Successfully retrieved post count
+          schema: 
+            $ref: '#/definitions/PostCount'
 
   /posts:
     post:
@@ -424,7 +471,16 @@ paths:
       parameters:
       - $ref: '#/parameters/pageParam'
       - $ref: '#/parameters/perPageParam'
-      - $ref: '#/parameters/fields'
+      - $ref: '#/parameters/titleParam'
+      - $ref: '#/parameters/titleRegexParam'
+      - $ref: '#/parameters/tagParam'
+      - $ref: '#/parameters/categoryParam'
+      - $ref: '#/parameters/postStatusParam'
+      - $ref: '#/parameters/postTypeParam'
+      - $ref: '#/parameters/beforeDateParam'
+      - $ref: '#/parameters/afterDateParam'
+      - $ref: '#/parameters/authorParam'
+      - $ref: '#/parameters/skywordContentParam'
       responses:
         200:
           description: Success
@@ -910,6 +966,15 @@ definitions:
         type: string
         example: "animals"
         description: The parent element (if present)
+  Tags:
+    type: string
+    example: 'tag1, tag2, tag3'
+  Categories:
+    type: string
+    example: 'category1, category2'
+  PostCount:
+    type: string
+    example: '"1743"'
   Version:
     type: object
     properties:
@@ -1141,3 +1206,64 @@ parameters:
     type: string
     description: Comma delimited fields names to include in the response. If not sent, all fields are returned.
     required: false
+  titleParam:
+    name: title
+    in: query
+    type: string
+    description: Title must match this exactly
+    required: false
+  titleRegexParam:
+    name: titleRegex
+    in: query
+    type: string
+    description: Title must match this regex
+    required: false
+  tagParam:
+    name: tag
+    in: query
+    type: string
+    description: Results must have this tag
+    required: false
+  categoryParam:
+    name: category
+    in: query
+    type: string
+    description: Results must belong to this category
+    required: false
+  postStatusParam:
+    name: postStatus
+    in: query
+    type: string
+    description: Results must have this status
+    required: false
+  postTypeParam:
+    name: postType
+    in: query
+    type: string
+    description: Results must be of this type
+    required: false
+  beforeDateParam:
+    name: beforeDate
+    in: query
+    type: string
+    description: Results must have been created before this date
+    required: false
+  afterDateParam:
+    name: afterDate
+    in: query
+    type: string
+    description: Results must have been created after this date
+    required: false
+  authorParam:
+    name: author
+    in: query
+    type: integer
+    description: Author must have this id
+    required: false
+  skywordContentParam:
+    name: skywordContent
+    in: query
+    type: boolean
+    description: Supplied if Skyword content should be included
+    required: false
+    
